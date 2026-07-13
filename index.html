@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dukamo Coffee — Traced to Source</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Noto+Serif+Ethiopic:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#160F0A;
+    --surface:#20160E;
+    --surface-2:#291C12;
+    --line: rgba(238,222,201,0.12);
+    --line-strong: rgba(238,222,201,0.22);
+    --cream:#F5F1E8;
+    --cream-dim: rgba(245,241,232,0.62);
+    --cream-faint: rgba(245,241,232,0.38);
+    --amber:#F2C744;
+    --amber-dim: rgba(242,199,68,0.5);
+    --scan:#3ADE8A;
+    --scan-dim: rgba(58,222,138,0.5);
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Source Serif 4', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background-color:var(--bg);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg transform='rotate(28 30 30)'%3E%3Cellipse cx='30' cy='30' rx='15' ry='9' fill='none' stroke='%232E2013' stroke-width='1.2'/%3E%3Cpath d='M30 21.5 Q25 30 30 38.5' fill='none' stroke='%232E2013' stroke-width='1.2'/%3E%3C/g%3E%3Cg transform='rotate(-15 65 65)'%3E%3Cellipse cx='65' cy='65' rx='15' ry='9' fill='none' stroke='%232E2013' stroke-width='1.2'/%3E%3Cpath d='M65 56.5 Q60 65 65 73.5' fill='none' stroke='%232E2013' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat:repeat;
+    color:var(--cream);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--amber); color:#160F0A; }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--scan);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:6px; height:6px;
+    background:var(--scan);
+    border-radius:50%;
+    box-shadow:0 0 8px var(--scan);
+  }
+
+  [data-i18n]{ transition: opacity .25s ease; }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px clamp(20px,5vw,56px);
+    background:linear-gradient(to bottom, rgba(10,15,12,0.92), rgba(10,15,12,0));
+    backdrop-filter:blur(6px);
+  }
+  .logo{
+    display:flex; align-items:center;
+  }
+  .logo svg{ display:block; height:70px; width:auto; color:var(--cream); }
+  .wm-am{ font-family:'Noto Serif Ethiopic', serif; font-weight:700; }
+  .wm-en{ font-family:'Source Serif 4', serif; font-weight:700; letter-spacing:0.04em; }
+  footer .f-logo svg{ height:70px; width:auto; color:var(--cream); display:block; }
+  nav{ display:flex; align-items:center; gap:36px; }
+  nav a{
+    color:var(--cream-dim);
+    text-decoration:none;
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    transition:color .2s;
+  }
+  nav a:hover, nav a:focus-visible{ color:var(--amber); }
+  .nav-links{ display:flex; gap:32px; }
+  .header-actions{ display:flex; align-items:center; gap:18px; }
+  .lang-toggle{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.06em;
+    background:transparent;
+    border:1px solid var(--line-strong);
+    color:var(--cream-dim);
+    padding:7px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .lang-toggle:hover, .lang-toggle:focus-visible{ border-color:var(--amber); color:var(--amber); }
+  .btn-order{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:var(--amber);
+    color:#160F0A;
+    border:none;
+    padding:10px 18px;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:500;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-order:hover, .btn-order:focus-visible{ transform:translateY(-1px); box-shadow:0 6px 20px rgba(242,199,68,0.25); }
+  @media (max-width:820px){ .nav-links{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:140px clamp(20px,5vw,56px) 60px;
+    position:relative;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.35;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 75%);
+    pointer-events:none;
+  }
+  .scanline{
+    position:absolute; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, var(--scan), transparent);
+    opacity:0.7;
+    animation:scandown 5s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes scandown{ 0%{ top:8%; } 100%{ top:92%; } }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:60px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+  @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+
+  .hero h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(40px, 6vw, 74px);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    margin:18px 0 22px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--amber);
+  }
+  .hero p.lede{
+    font-family:var(--body);
+    font-size:18px;
+    line-height:1.6;
+    color:var(--cream-dim);
+    max-width:46ch;
+    margin-bottom:34px;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .btn-ghost{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:transparent;
+    color:var(--cream);
+    border:1px solid var(--line-strong);
+    padding:13px 22px;
+    border-radius:24px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    transition:border-color .2s, color .2s;
+  }
+  .btn-ghost:hover, .btn-ghost:focus-visible{ border-color:var(--scan); color:var(--scan); }
+  .btn-solid{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:var(--amber);
+    color:#160F0A;
+    border:none;
+    padding:14px 24px;
+    border-radius:24px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    font-weight:500;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-solid:hover, .btn-solid:focus-visible{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(242,199,68,0.25); }
+
+  .coord-strip{
+    margin-top:44px;
+    display:flex; gap:28px; flex-wrap:wrap;
+    font-family:var(--mono); font-size:12px; color:var(--cream-faint);
+  }
+  .coord-strip span b{ color:var(--cream-dim); font-weight:500; }
+
+  /* ---------- CUPPING RADAR (signature element) ---------- */
+  .radar-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 26px 20px;
+  }
+  .radar-card .card-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:6px;
+  }
+  .radar-card .card-head h3{
+    font-family:var(--display); font-weight:600; font-size:15px;
+  }
+  .radar-card .card-head span{
+    font-family:var(--mono); font-size:11px; color:var(--scan);
+  }
+  .radar-card .sub{
+    font-family:var(--mono); font-size:11px; color:var(--cream-faint); margin-bottom:10px;
+  }
+  .radar-wrap{ position:relative; }
+  .radar-wrap svg{ width:100%; height:auto; display:block; }
+  .radar-poly{
+    animation:pulse 4s ease-in-out infinite;
+    transform-origin:center;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.85; }
+    50%{ opacity:1; }
+  }
+  .radar-labels text{
+    font-family:var(--mono);
+    font-size:9px;
+    fill:var(--cream-dim);
+  }
+  .radar-score{
+    font-family:var(--mono); font-size:10px; fill:var(--amber);
+  }
+
+  /* ---------- SECTION SCAFFOLDING ---------- */
+  section{
+    padding:110px clamp(20px,5vw,56px);
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .section-head{
+    display:grid;
+    grid-template-columns:1fr 1.4fr;
+    gap:40px;
+    margin-bottom:64px;
+  }
+  @media (max-width:820px){ .section-head{ grid-template-columns:1fr; } }
+  .section-head h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(30px,3.6vw,44px);
+    letter-spacing:-0.01em;
+    line-height:1.08;
+    margin-top:14px;
+  }
+  .section-head .desc{
+    font-family:var(--body);
+    color:var(--cream-dim);
+    font-size:16px;
+    line-height:1.7;
+    align-self:end;
+    max-width:52ch;
+  }
+
+  /* ---------- ORIGIN ---------- */
+  .origin-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  @media (max-width:820px){ .origin-grid{ grid-template-columns:1fr; } }
+  .origin-cell{
+    background:var(--surface);
+    padding:32px 28px;
+    transition:background .25s;
+  }
+  .origin-cell:hover{ background:var(--surface-2); }
+  .origin-cell .region{
+    font-family:var(--display); font-weight:600; font-size:20px; margin-bottom:4px;
+  }
+  .origin-cell .coords{
+    font-family:var(--mono); font-size:11px; color:var(--scan); margin-bottom:18px;
+  }
+  .origin-cell dl{
+    display:grid; grid-template-columns:auto 1fr; gap:6px 14px;
+    font-family:var(--mono); font-size:12px;
+  }
+  .origin-cell dt{ color:var(--cream-faint); }
+  .origin-cell dd{ color:var(--cream); text-align:right; }
+
+  /* ---------- ROAST CURVE ---------- */
+  .roast-wrap{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:44px clamp(20px,4vw,52px);
+  }
+  .roast-chart{ width:100%; height:auto; display:block; margin-bottom:8px; }
+  .roast-stages{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+    margin-top:36px;
+  }
+  @media (max-width:760px){ .roast-stages{ grid-template-columns:repeat(2,1fr); } }
+  .stage{ border-left:1px solid var(--line-strong); padding-left:14px; }
+  .stage .num{ font-family:var(--mono); font-size:11px; color:var(--amber); }
+  .stage .t{ font-family:var(--display); font-weight:600; font-size:15px; margin:6px 0 4px; }
+  .stage .d{ font-family:var(--body); font-size:13px; color:var(--cream-dim); line-height:1.5; }
+
+  /* ---------- LOCATIONS ---------- */
+  .loc-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  @media (max-width:900px){ .loc-grid{ grid-template-columns:1fr; } }
+  .loc-card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:28px;
+    position:relative;
+    transition:border-color .25s, transform .25s;
+  }
+  .loc-card:hover{ border-color:var(--amber-dim); transform:translateY(-3px); }
+  .loc-card .status{
+    font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--scan); margin-bottom:16px; display:flex; align-items:center; gap:6px;
+  }
+  .loc-card .status::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--scan); box-shadow:0 0 6px var(--scan); }
+  .loc-card h3{ font-family:var(--display); font-weight:600; font-size:20px; margin-bottom:8px; }
+  .loc-card p{ font-family:var(--body); font-size:14px; color:var(--cream-dim); line-height:1.6; margin-bottom:14px; }
+  .loc-card .hours{ font-family:var(--mono); font-size:11px; color:var(--cream-faint); }
+
+  /* ---------- VALUE / QUALITY ---------- */
+  .value-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+  }
+  @media (max-width:820px){ .value-grid{ grid-template-columns:1fr; } }
+  .value-cell{ background:var(--surface); padding:40px 30px; text-align:center; transition:background .25s; }
+  .value-cell:hover{ background:var(--surface-2); }
+  .value-cell .icon{ width:32px; height:32px; margin:0 auto 20px; color:var(--amber); display:block; }
+  .value-cell h3{ font-family:var(--display); font-weight:600; font-size:18px; margin-bottom:10px; }
+  .value-cell p{ font-family:var(--body); font-size:14px; color:var(--cream-dim); line-height:1.6; max-width:32ch; margin:0 auto; }
+
+  /* ---------- LOCATION PHOTO ---------- */
+  .loc-photo-grid{ margin-bottom:28px; }
+  .loc-photo{ position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); }
+  .loc-photo img{ width:100%; height:auto; max-height:520px; display:block; object-fit:cover; }
+  .loc-photo .cap{
+    position:absolute; left:0; right:0; bottom:0; padding:18px 24px;
+    background:linear-gradient(to top, rgba(22,15,10,0.88), transparent);
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--cream-dim);
+  }
+
+  /* ---------- FEEDBACK ---------- */
+  .feedback-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  @media (max-width:900px){ .feedback-grid{ grid-template-columns:1fr; } }
+  .feedback-card{ border:1px solid var(--line); border-radius:16px; padding:26px; transition:border-color .25s; }
+  .feedback-card:hover{ border-color:var(--amber-dim); }
+  .feedback-card .quote{ font-family:var(--body); font-style:italic; font-size:14px; color:var(--cream-dim); line-height:1.6; margin-bottom:20px; }
+  .feedback-card .name{ font-family:var(--display); font-weight:600; font-size:14px; }
+  .feedback-card .role{ font-family:var(--mono); font-size:11px; color:var(--cream-faint); margin-top:2px; }
+
+  /* ---------- CTA / FOOTER ---------- */
+  .cta{
+    padding:110px clamp(20px,5vw,56px);
+    border-bottom:1px solid var(--line);
+  }
+  .cta-grid{
+    display:grid; grid-template-columns:1fr 340px; gap:60px; align-items:center;
+  }
+  @media (max-width:820px){ .cta-grid{ grid-template-columns:1fr; } }
+  .cta h2{
+    font-family:var(--display); font-weight:600;
+    font-size:clamp(32px,5vw,56px);
+    letter-spacing:-0.01em;
+    max-width:14ch;
+    margin:16px 0 34px;
+    line-height:1.08;
+  }
+  .cta-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+  .cta-photo{
+    position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line);
+    justify-self:center;
+  }
+  .cta-photo img{ display:block; width:100%; max-width:320px; height:auto; }
+  .cta-photo .tag{
+    position:absolute; top:16px; right:16px;
+    background:var(--cream); color:#160F0A;
+    font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    padding:6px 10px; border-radius:4px; font-weight:500;
+  }
+
+  footer{
+    padding:48px clamp(20px,5vw,56px) 40px;
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:24px;
+  }
+  footer .f-logo{ font-family:var(--display); font-weight:700; font-size:16px; }
+  footer .f-sub{ font-family:var(--mono); font-size:11px; color:var(--cream-faint); margin-top:6px; }
+  footer .f-links{ display:flex; gap:22px; }
+  footer .f-links a{ color:var(--cream-dim); text-decoration:none; font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase; }
+  footer .f-links a:hover{ color:var(--amber); }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    .scanline, .radar-poly{ animation:none; }
+    .reveal{ transition:none; opacity:1; transform:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#" aria-label="Dukamo Coffee">
+    <svg viewBox="0 0 210 99" xmlns="http://www.w3.org/2000/svg">
+      <text x="105" y="40" text-anchor="middle" class="wm-am" font-size="34" fill="currentColor">ዱካሞ</text>
+      <text x="105" y="86" text-anchor="middle" class="wm-en" font-size="32" fill="currentColor">DUKAMO</text>
+    </svg>
+  </a>
+  <nav>
+    <div class="nav-links">
+      <a href="#origin" data-en="Origin" data-am="ምንጭ">Origin</a>
+      <a href="#roast" data-en="Roast" data-am="ቆሎ">Roast</a>
+      <a href="#locations" data-en="Locations" data-am="አድራሻ">Locations</a>
+    </div>
+    <div class="header-actions">
+      <button class="lang-toggle" id="langToggle">EN / አማ</button>
+      <button class="btn-order" onclick="document.getElementById('locations').scrollIntoView()"><span data-en="Order Now" data-am="አዘዝ">Order Now</span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="scanline"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow"><span data-en="LAT 9.03° N · LON 38.74° E · ADDIS ABABA" data-am="ላቲ 9.03° N · ሎን 38.74° E · አዲስ አበባ">LAT 9.03° N · LON 38.74° E · ADDIS ABABA</span></div>
+      <h1>
+        <span data-en="Coffee," data-am="ቡና,">Coffee,</span>
+        <em data-en="traced" data-am="የተከተለ">traced</em>
+        <span data-en="to its source." data-am="ወደ ምንጩ.">to its source.</span>
+      </h1>
+      <p class="lede" data-en="Dukamo roasts single-origin lots from the highlands where coffee was born — Sidama, Guji, Yirgacheffe — and puts the full journey, farm to cup, in front of you." data-am="ዱካሞ ቡና ከተወለደበት ኢትዮጵያ ደጋማ ስፍራዎች — ሲዳማ፣ ጉጂ፣ ይርጋጨፌ — ነጠላ-ምንጭ ቡናን ይቆላል፣ ከእርሻ እስከ ስኒ ያለውን ሙሉ ጉዞ ያሳያል።">Dukamo roasts single-origin lots from the highlands where coffee was born — Sidama, Guji, Yirgacheffe — and puts the full journey, farm to cup, in front of you.</p>
+      <div class="hero-ctas">
+        <a class="btn-solid" href="#roast" data-en="See the roast data" data-am="የቆሎ መረጃ ይመልከቱ">See the roast data</a>
+        <a class="btn-ghost" href="#locations" data-en="Find a location" data-am="አድራሻ ፈልግ">Find a location</a>
+      </div>
+      <div class="coord-strip">
+        <span><b data-en="Powered by" data-am="የተጎላበተው በ">Powered by</b> Buncho Coffee</span>
+        <span><b data-en="Since" data-am="ከ">Since</b> 2019</span>
+        <span><b data-en="Roasted in" data-am="የተቆላበት">Roasted in</b> Addis Ababa</span>
+      </div>
+    </div>
+
+    <div class="radar-card reveal">
+      <div class="card-head">
+        <h3 data-en="Cupping Profile" data-am="የመቅመሻ መገለጫ">Cupping Profile</h3>
+        <span>LOT #DK-0472</span>
+      </div>
+      <div class="sub" data-en="Yirgacheffe · Washed · 2,050m · Score 9.1" data-am="ይርጋጨፌ · የታጠበ · 2,050ሜ · ውጤት 9.1">Yirgacheffe · Washed · 2,050m · Score 9.1</div>
+      <div class="radar-wrap">
+        <svg viewBox="0 0 300 262" class="radar-labels">
+          <!-- grid rings (pentagon, center 150,130, r=95/60/30) -->
+          <polygon points="150,35 240,101 206,207 94,207 60,101" fill="none" stroke="rgba(245,241,232,0.10)" stroke-width="1"/>
+          <polygon points="150,68 208,111 186,180 114,180 92,111" fill="none" stroke="rgba(245,241,232,0.10)" stroke-width="1"/>
+          <polygon points="150,100 179,121 168,155 132,155 121,121" fill="none" stroke="rgba(245,241,232,0.10)" stroke-width="1"/>
+          <!-- data polygon: Aroma, Acidity, Sweetness, Body, Finish -->
+          <polygon class="radar-poly" points="150,45 227,76 194,167 104,170 69,75" fill="rgba(58,222,138,0.16)" stroke="#3ADE8A" stroke-width="2"/>
+          <text x="150" y="18" text-anchor="middle">AROMA</text>
+          <text x="248" y="98" text-anchor="start">ACIDITY</text>
+          <text x="206" y="230" text-anchor="middle">SWEETNESS</text>
+          <text x="94" y="230" text-anchor="middle">BODY</text>
+          <text x="52" y="98" text-anchor="end">FINISH</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="origin">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow" data-en="TRACEABILITY" data-am="ተከታታይነት">TRACEABILITY</div>
+      <h2 data-en="Three regions. One birthplace." data-am="ሦስት ክልሎች። አንድ የትውልድ ቦታ።">Three regions. One birthplace.</h2>
+    </div>
+    <p class="desc" data-en="From seed to cup, we publish the coordinates, altitude, and process behind every lot we roast." data-am="ከዘር እስከ ስኒ፣ ለምንቆላው ለእያንዳንዱ ሎት አስተባባሪ፣ ከፍታ እና ሂደት እናሳያለን።">From seed to cup, we publish the coordinates, altitude, and process behind every lot we roast.</p>
+  </div>
+
+  <div class="origin-grid reveal">
+    <div class="origin-cell">
+      <div class="region">Yirgacheffe</div>
+      <div class="coords">6.16° N, 38.20° E</div>
+      <dl>
+        <dt data-en="Altitude" data-am="ከፍታ">Altitude</dt><dd>1,950–2,200m</dd>
+        <dt data-en="Process" data-am="ሂደት">Process</dt><dd data-en="Washed" data-am="የታጠበ">Washed</dd>
+        <dt data-en="Harvest" data-am="ምርት">Harvest</dt><dd>Oct–Dec</dd>
+        <dt data-en="Notes" data-am="ማስታወሻ">Notes</dt><dd data-en="Jasmine, citrus" data-am="ያስሚን፣ ሎሚ">Jasmine, citrus</dd>
+      </dl>
+    </div>
+    <div class="origin-cell">
+      <div class="region">Guji</div>
+      <div class="coords">5.83° N, 38.83° E</div>
+      <dl>
+        <dt data-en="Altitude" data-am="ከፍታ">Altitude</dt><dd>1,850–2,300m</dd>
+        <dt data-en="Process" data-am="ሂደት">Process</dt><dd data-en="Natural" data-am="ተፈጥሯዊ">Natural</dd>
+        <dt data-en="Harvest" data-am="ምርት">Harvest</dt><dd>Nov–Jan</dd>
+        <dt data-en="Notes" data-am="ማስታወሻ">Notes</dt><dd data-en="Berry, wine" data-am="ቤሪ፣ ወይን">Berry, wine</dd>
+      </dl>
+    </div>
+    <div class="origin-cell">
+      <div class="region">Sidama</div>
+      <div class="coords">6.83° N, 38.43° E</div>
+      <dl>
+        <dt data-en="Altitude" data-am="ከፍታ">Altitude</dt><dd>1,700–2,100m</dd>
+        <dt data-en="Process" data-am="ሂደት">Process</dt><dd data-en="Washed" data-am="የታጠበ">Washed</dd>
+        <dt data-en="Harvest" data-am="ምርት">Harvest</dt><dd>Oct–Dec</dd>
+        <dt data-en="Notes" data-am="ማስታወሻ">Notes</dt><dd data-en="Honey, stone fruit" data-am="ማር፣ ድንጋያማ ፍራፍሬ">Honey, stone fruit</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="quality">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow" data-en="WHY DUKAMO" data-am="ለምን ዱካሞ">WHY DUKAMO</div>
+      <h2 data-en="Built on three commitments." data-am="በሦስት ቁርጠኝነቶች ላይ የተገነባ።">Built on three commitments.</h2>
+    </div>
+    <p class="desc" data-en="Quality isn't a marketing line here — it's sourcing, craft, and people, measured the same way every day." data-am="ጥራት እዚህ የማስታወቂያ ቃል አይደለም — ግኝት፣ ጥበብ እና ሰዎች፣ በየቀኑ በተመሳሳይ መንገድ የሚለኩ ናቸው።">Quality isn't a marketing line here — it's sourcing, craft, and people, measured the same way every day.</p>
+  </div>
+  <div class="value-grid reveal">
+    <div class="value-cell">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v6a6 6 0 0 1-12 0V4z"/><path d="M16 7h2a2 2 0 0 1 0 4h-2"/><path d="M3 20h14"/></svg>
+      <h3 data-en="Finest sourced beans" data-am="ምርጥ የተመረጡ ቡናዎች">Finest sourced beans</h3>
+      <p data-en="We travel to the highlands to find ethically sourced lots worth the trip." data-am="ጉዞ ዋጋ ያላቸውን በስነ-ምግባር የተገኙ ሎቶች ለማግኘት ወደ ደጋማ ቦታዎች እንጓዛለን።">We travel to the highlands to find ethically sourced lots worth the trip.</p>
+    </div>
+    <div class="value-cell">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2 3.2 5 6.4 5 10.4a5 5 0 0 1-10 0c0-1.9.9-3 1.9-3.9-.3 1.4.6 1.9.6 1.9C9 7.4 12 5.6 12 2z"/></svg>
+      <h3 data-en="Expert roasting" data-am="ብቃት ያለው ቆሎ">Expert roasting</h3>
+      <p data-en="Every bean gets its own logged profile to unlock its full flavor." data-am="እያንዳንዱ ቡና ሙሉ ጣዕሙን ለመክፈት የራሱ የተመዘገበ መገለጫ አለው።">Every bean gets its own logged profile to unlock its full flavor.</p>
+    </div>
+    <div class="value-cell">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 20c.4-2.2 2-4 4.5-4"/></svg>
+      <h3 data-en="Passionate baristas" data-am="ፍቅር ያላቸው ባሪስታዎች">Passionate baristas</h3>
+      <p data-en="Our team shares a love for coffee and for the community it brings together." data-am="ቡድናችን ለቡና እና ለሚያመጣው ማህበረሰብ ፍቅር ይጋራል።">Our team shares a love for coffee and for the community it brings together.</p>
+    </div>
+  </div>
+</section>
+
+<section id="roast">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow" data-en="ROAST CURVE" data-am="የቆሎ ኩርባ">ROAST CURVE</div>
+      <h2 data-en="Every batch, logged." data-am="እያንዳንዱ ባች፣ ተመዝግቧል።">Every batch, logged.</h2>
+    </div>
+    <p class="desc" data-en="We track temperature and time through every roast, from charge to drop, so the profile behind your cup is never a guess." data-am="ከመጀመሪያ እስከ መጨረሻ ያለውን የሙቀትና ጊዜ ለውጥ በእያንዳንዱ ቆሎ እንከታተላለን፣ ስለዚህ የስኒዎ መገለጫ ግምት አይደለም።">We track temperature and time through every roast, from charge to drop, so the profile behind your cup is never a guess.</p>
+  </div>
+
+  <div class="roast-wrap reveal">
+    <svg viewBox="0 0 900 260" class="roast-chart" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="roastFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F2C744" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#F2C744" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <g stroke="rgba(245,241,232,0.08)" stroke-width="1">
+        <line x1="0" y1="40" x2="900" y2="40"/>
+        <line x1="0" y1="100" x2="900" y2="100"/>
+        <line x1="0" y1="160" x2="900" y2="160"/>
+        <line x1="0" y1="220" x2="900" y2="220"/>
+      </g>
+      <path d="M0,220 C120,210 200,150 300,120 C420,84 520,55 620,38 C720,24 820,18 900,14 L900,260 L0,260 Z" fill="url(#roastFill)"/>
+      <path d="M0,220 C120,210 200,150 300,120 C420,84 520,55 620,38 C720,24 820,18 900,14" fill="none" stroke="#F2C744" stroke-width="2.5"/>
+      <circle cx="300" cy="120" r="4" fill="#3ADE8A"/>
+      <circle cx="620" cy="38" r="4" fill="#3ADE8A"/>
+    </svg>
+    <div class="roast-stages">
+      <div class="stage">
+        <div class="num">01 · 0:00</div>
+        <div class="t" data-en="Charge" data-am="ጅምር">Charge</div>
+        <div class="d" data-en="Green beans enter at 200°C drum temp." data-am="አረንጓዴ ቡና በ200°ሴ ገባ።">Green beans enter at 200°C drum temp.</div>
+      </div>
+      <div class="stage">
+        <div class="num">02 · 4:30</div>
+        <div class="t" data-en="Yellowing" data-am="ወደ ቢጫ">Yellowing</div>
+        <div class="d" data-en="Moisture drives off, beans turn straw-gold." data-am="እርጥበት ይወጣል፣ ቡናው ወደ ገለባ-ወርቅ ይቀየራል።">Moisture drives off, beans turn straw-gold.</div>
+      </div>
+      <div class="stage">
+        <div class="num">03 · 8:10</div>
+        <div class="t" data-en="First Crack" data-am="የመጀመሪያ ስንጥቅ">First Crack</div>
+        <div class="d" data-en="Structural pop signals development phase begins." data-am="የመዋቅር ድምጽ የልማት ደረጃ መጀመሩን ያሳያል።">Structural pop signals development phase begins.</div>
+      </div>
+      <div class="stage">
+        <div class="num">04 · 10:45</div>
+        <div class="t" data-en="Drop" data-am="ማውረጃ">Drop</div>
+        <div class="d" data-en="Pulled at first-crack +2:30 for a light-medium roast." data-am="በመጀመሪያ ስንጥቅ +2:30 ላይ ወርዷል፣ ቀላል-መካከለኛ ቆሎ።">Pulled at first-crack +2:30 for a light-medium roast.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="locations">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow" data-en="VISIT US" data-am="ይጎብኙን">VISIT US</div>
+      <h2 data-en="Find your nearest cup." data-am="የቅርብዎን ስኒ ያግኙ።">Find your nearest cup.</h2>
+    </div>
+    <p class="desc" data-en="Three cafés, one roastery, all serving the same day's roast." data-am="ሦስት ካፌዎች፣ አንድ መቁያ ቤት፣ ሁሉም የዛሬውን ቆሎ ያቀርባሉ።">Three cafés, one roastery, all serving the same day's roast.</p>
+  </div>
+
+  <div class="loc-photo-grid reveal">
+    <div class="loc-photo">
+      <img src="https://d2kihw5e8drjh5.cloudfront.net/eyJidWNrZXQiOiJ1dGEtaW1hZ2VzIiwia2V5IjoicGxhY2VfaW1nL210d2hBWTA5UlZxdTY2cGV1NnZTTUEiLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjY0MCwiaGVpZ2h0Ijo2NDAsImZpdCI6Imluc2lkZSJ9LCJyb3RhdGUiOm51bGwsInRvRm9ybWF0IjogIndlYnAifX0=" alt="Dukamo Coffee, Bole location interior" loading="lazy">
+      <div class="cap" data-en="Dukamo Coffee — Bole location" data-am="ዱካሞ ቡና — ቦሌ ቅርንጫፍ">Dukamo Coffee — Bole location</div>
+    </div>
+  </div>
+
+  <div class="loc-grid reveal">
+    <div class="loc-card">
+      <div class="status" data-en="Open now" data-am="ክፍት ነው">Open now</div>
+      <h3>Bole</h3>
+      <p data-en="Our flagship café, steps from Edna Mall. Warm wood, low light, full menu." data-am="ዋናው ካፌያችን፣ ከኤድና ሞል በእግር ርቀት። ሙቅ እንጨት፣ ለስላሳ ብርሃን፣ ሙሉ ምናሌ።">Our flagship café, steps from Edna Mall. Warm wood, low light, full menu.</p>
+      <div class="hours">06:30 – 21:00</div>
+    </div>
+    <div class="loc-card">
+      <div class="status" data-en="Open now" data-am="ክፍት ነው">Open now</div>
+      <h3>Mexico</h3>
+      <p data-en="Roastery and tasting room, small-batch pours." data-am="የመቁያ ቤትና መቅመሻ ክፍል፣ ጥቃቅን-ባች ቡና።">Roastery and tasting room, small-batch pours.</p>
+      <div class="hours">07:00 – 20:00</div>
+    </div>
+    <div class="loc-card">
+      <div class="status" data-en="Open now" data-am="ክፍት ነው">Open now</div>
+      <h3>Hawassa</h3>
+      <p data-en="Lakeside branch, closest to the Sidama farms." data-am="በሐይቅ ዳር ያለ ቅርንጫፍ፣ ለሲዳማ እርሻዎች ቅርብ።">Lakeside branch, closest to the Sidama farms.</p>
+      <div class="hours">06:30 – 21:00</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-grid">
+    <div>
+      <div class="eyebrow reveal" data-en="THE MENU" data-am="ምናሌ">THE MENU</div>
+      <h2 class="reveal" data-en="Ready when you are." data-am="ዝግጁ ነን።">Ready when you are.</h2>
+      <div class="cta-actions reveal">
+        <a class="btn-solid" href="#" data-en="View digital menu" data-am="ዲጂታል ምናሌ ይመልከቱ">View digital menu</a>
+        <a class="btn-ghost" href="#" data-en="Order for pickup" data-am="ለመውሰድ ይዘዙ">Order for pickup</a>
+      </div>
+    </div>
+    <div class="cta-photo reveal">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfDoIyg5dSAkE14Vm1VljXdYpgS5AEbHEjgsa4nfLvmw&s=10" alt="Bag of Dukamo Coffee, single-origin Sidama, Ethiopia">
+      <div class="tag">EST. SIDAMA</div>
+    </div>
+  </div>
+</section>
+
+<section id="feedback">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow" data-en="IN THEIR WORDS" data-am="በራሳቸው ቃላት">IN THEIR WORDS</div>
+      <h2 data-en="What the regulars say." data-am="መደበኛ ደንበኞች የሚሉት።">What the regulars say.</h2>
+    </div>
+    <p class="desc" data-en="Real feedback from the people who show up every week." data-am="በየሳምንቱ ከሚመጡ ሰዎች የተገኘ እውነተኛ አስተያየት።">Real feedback from the people who show up every week.</p>
+  </div>
+  <div class="feedback-grid reveal">
+    <div class="feedback-card">
+      <div class="quote" data-en="“The best macchiato in Addis. The atmosphere is amazing.”" data-am="“በአዲስ ውስጥ ምርጥ ማኪያቶ። ድባቡ አስደናቂ ነው።”">“The best macchiato in Addis. The atmosphere is amazing.”</div>
+      <div class="name">Bethlehem T.</div>
+      <div class="role" data-en="Coffee lover" data-am="የቡና አፍቃሪ">Coffee lover</div>
+    </div>
+    <div class="feedback-card">
+      <div class="quote" data-en="“I buy their roasted beans every week. Premium quality.”" data-am="“የተቆላ ቡናቸውን በየሳምንቱ እገዛለሁ። ከፍተኛ ጥራት።”">“I buy their roasted beans every week. Premium quality.”</div>
+      <div class="name">Dawit M.</div>
+      <div class="role" data-en="Regular customer" data-am="መደበኛ ደንበኛ">Regular customer</div>
+    </div>
+    <div class="feedback-card">
+      <div class="quote" data-en="“Incredible flavor profile. Highly recommend visiting the roastery.”" data-am="“አስደናቂ የጣዕም መገለጫ። መቁያ ቤቱን መጎብኘት በጣም እመክራለሁ።”">“Incredible flavor profile. Highly recommend visiting the roastery.”</div>
+      <div class="name">Sarah J.</div>
+      <div class="role" data-en="Tourist" data-am="ቱሪስት">Tourist</div>
+    </div>
+    <div class="feedback-card">
+      <div class="quote" data-en="“Great service and even better coffee.”" data-am="“ጥሩ አገልግሎት እና የተሻለ ቡና።”">“Great service and even better coffee.”</div>
+      <div class="name">Kaleb A.</div>
+      <div class="role" data-en="Foodie" data-am="የምግብ አፍቃሪ">Foodie</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="f-logo">
+      <svg viewBox="0 0 210 99" xmlns="http://www.w3.org/2000/svg">
+        <text x="105" y="40" text-anchor="middle" class="wm-am" font-size="34" fill="currentColor">ዱካሞ</text>
+        <text x="105" y="86" text-anchor="middle" class="wm-en" font-size="32" fill="currentColor">DUKAMO</text>
+      </svg>
+    </div>
+    <div class="f-sub" data-en="Speciality Ethiopian coffee · Powered by Buncho Coffee" data-am="ልዩ የኢትዮጵያ ቡና · የተጎላበተው በ Buncho Coffee">Speciality Ethiopian coffee · Powered by Buncho Coffee</div>
+  </div>
+  <div class="f-links">
+    <a href="#origin" data-en="Origin" data-am="ምንጭ">Origin</a>
+    <a href="#roast" data-en="Roast" data-am="ቆሎ">Roast</a>
+    <a href="#locations" data-en="Locations" data-am="አድራሻ">Locations</a>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('langToggle');
+  let isAmharic = false;
+  function applyLanguage(){
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const text = isAmharic ? el.getAttribute('data-am') : el.getAttribute('data-en');
+      if(text) el.textContent = text;
+    });
+    document.documentElement.setAttribute('data-lang', isAmharic ? 'am' : 'en');
+  }
+  toggle.addEventListener('click', () => {
+    isAmharic = !isAmharic;
+    applyLanguage();
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
