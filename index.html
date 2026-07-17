@@ -68,7 +68,7 @@
   .logo{
     display:flex; align-items:center;
   }
-  .logo svg{ display:block; height:40px; width:auto; color:var(--cream); }
+  .logo svg{ display:block; height:80px; width:auto; color:var(--cream); }
   .wm-am{ font-family:'Noto Serif Ethiopic', serif; font-weight:700; }
   .wm-en{ font-family:'Source Serif 4', serif; font-weight:700; letter-spacing:0.04em; }
   footer .f-logo svg{ height:34px; width:auto; color:var(--cream); display:block; }
@@ -361,6 +361,22 @@
   .loc-card p{ font-family:var(--body); font-size:14px; color:var(--cream-dim); line-height:1.6; margin-bottom:14px; }
   .loc-card .hours{ font-family:var(--mono); font-size:11px; color:var(--cream-faint); }
 
+  .loc-toggle{ margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
+  .loc-toggle summary{
+    cursor:pointer; list-style:none;
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--scan); display:flex; align-items:center; gap:8px;
+  }
+  .loc-toggle summary::-webkit-details-marker{ display:none; }
+  .loc-toggle summary::after{ content:'+'; margin-left:auto; color:var(--cream-faint); font-size:14px; }
+  .loc-toggle[open] summary::after{ content:'\2013'; }
+  .loc-toggle .panel{ margin-top:14px; }
+  .loc-toggle .panel img{ width:100%; height:140px; object-fit:cover; border-radius:10px; display:block; margin-bottom:10px; border:1px solid var(--line); }
+  .loc-toggle .map-frame{ border-radius:10px; overflow:hidden; border:1px solid var(--line); }
+  .loc-toggle iframe{ width:100%; height:180px; border:0; display:block; filter:invert(92%) hue-rotate(180deg) contrast(90%) brightness(0.92); }
+  .loc-toggle .directions{ display:inline-block; margin-top:10px; font-family:var(--mono); font-size:11px; color:var(--amber); text-decoration:none; }
+  .loc-toggle .directions:hover{ text-decoration:underline; }
+
   /* ---------- VALUE / QUALITY ---------- */
   .value-grid{
     display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
@@ -431,6 +447,43 @@
   footer .f-links{ display:flex; gap:22px; }
   footer .f-links a{ color:var(--cream-dim); text-decoration:none; font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase; }
   footer .f-links a:hover{ color:var(--amber); }
+
+  /* ---------- BRANCH MODAL ---------- */
+  .branch-overlay{
+    position:fixed; inset:0; background:rgba(10,7,4,0.75);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:200;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .branch-overlay.open{ opacity:1; pointer-events:auto; }
+  .branch-modal{
+    background:var(--surface); border:1px solid var(--line-strong); border-radius:16px;
+    padding:32px; width:100%; max-width:360px;
+    transform:translateY(12px); transition:transform .25s ease;
+  }
+  .branch-overlay.open .branch-modal{ transform:translateY(0); }
+  .branch-modal h3{ font-family:var(--display); font-weight:600; font-size:19px; margin-bottom:4px; }
+  .branch-modal .sub{ font-family:var(--mono); font-size:11px; color:var(--cream-faint); margin-bottom:22px; }
+  .branch-option{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; text-align:left;
+    background:transparent; border:1px solid var(--line); border-radius:10px;
+    color:var(--cream); font-family:var(--display); font-weight:600; font-size:15px;
+    padding:14px 16px; margin-bottom:10px; cursor:pointer;
+    transition:border-color .2s, background .2s;
+  }
+  .branch-option:hover, .branch-option:focus-visible{ border-color:var(--amber); background:var(--surface-2); }
+  .branch-option span.arrow{ font-family:var(--mono); color:var(--amber); font-weight:400; }
+  .branch-option:disabled{ cursor:not-allowed; opacity:0.5; }
+  .branch-option:disabled:hover{ border-color:var(--line); background:transparent; }
+  .branch-option span.arrow.soon{ color:var(--cream-faint); font-size:10px; letter-spacing:.06em; text-transform:uppercase; }
+  .branch-close{
+    display:block; width:100%; text-align:center; margin-top:6px;
+    background:transparent; border:none; color:var(--cream-faint);
+    font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    padding:10px; cursor:pointer;
+  }
+  .branch-close:hover{ color:var(--cream); }
 
   .reveal{ opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease; }
   .reveal.in{ opacity:1; transform:translateY(0); }
@@ -645,7 +698,7 @@
 
   <div class="loc-photo-grid reveal">
     <div class="loc-photo">
-      <img src="https://d2kihw5e8drjh5.cloudfront.net/eyJidWNrZXQiOiJ1dGEtaW1hZ2VzIiwia2V5IjoicGxhY2VfaW1nL210d2hBWTA5UlZxdTY2cGV1NnZTTUEiLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjY0MCwiaGVpZ2h0Ijo2NDAsImZpdCI6Imluc2lkZSJ9LCJyb3RhdGUiOm51bGwsInRvRm9ybWF0IjogIndlYnAifX0=" alt="Dukamo Coffee, Bole location interior" loading="lazy">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEoDPeCno0houjdfkpkxL_KYzCZVoTy8Cf75m3LJ1_GQ&s=10" alt="Dukamo Coffee, Bole location interior" loading="lazy">
       <div class="cap" data-en="Dukamo Coffee — Bole location" data-am="ዱካሞ ቡና — ቦሌ ቅርንጫፍ">Dukamo Coffee — Bole location</div>
     </div>
   </div>
@@ -656,18 +709,48 @@
       <h3>Bole</h3>
       <p data-en="Our flagship café, steps from Edna Mall. Warm wood, low light, full menu." data-am="ዋናው ካፌያችን፣ ከኤድና ሞል በእግር ርቀት። ሙቅ እንጨት፣ ለስላሳ ብርሃን፣ ሙሉ ምናሌ።">Our flagship café, steps from Edna Mall. Warm wood, low light, full menu.</p>
       <div class="hours">06:30 – 21:00</div>
+      <details class="loc-toggle">
+        <summary data-en="View location" data-am="ካርታ ይመልከቱ">View location</summary>
+        <div class="panel">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt4xGgIWWVE3m27IRi0MSs1hBQUPXZRr1N5jsgzN5QFQ&s=10" alt="Dukamo Coffee, Bole location interior" loading="lazy">
+          <div class="map-frame">
+            <iframe src="https://www.google.com/maps?q=8.9964437,38.7876396&z=16&output=embed" loading="lazy" title="Map — Dukamo Coffee Bole"></iframe>
+          </div>
+          <a class="directions" href="https://maps.app.goo.gl/nWgUEJn4Cr3TY4og6" target="_blank" rel="noopener" data-en="Get directions →" data-am="አቅጣጫ ያግኙ →">Get directions →</a>
+        </div>
+      </details>
     </div>
     <div class="loc-card">
       <div class="status" data-en="Open now" data-am="ክፍት ነው">Open now</div>
       <h3>Mexico</h3>
       <p data-en="Roastery and tasting room, small-batch pours." data-am="የመቁያ ቤትና መቅመሻ ክፍል፣ ጥቃቅን-ባች ቡና።">Roastery and tasting room, small-batch pours.</p>
       <div class="hours">07:00 – 20:00</div>
+      <details class="loc-toggle">
+        <summary data-en="View location" data-am="ካርታ ይመልከቱ">View location</summary>
+        <div class="panel">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpqCHfzfmQoUIx0Z-Ft-nQJQvkplZtCFQ-SODGMQF19w&s=10" alt="Dukamo Coffee, Mexico location" loading="lazy">
+          <div class="map-frame">
+            <iframe src="https://www.google.com/maps?q=9.0156351,38.751023&z=16&output=embed" loading="lazy" title="Map — Dukamo Coffee Mexico"></iframe>
+          </div>
+          <a class="directions" href="https://maps.app.goo.gl/rCVLKPHLaAgxbguB8" target="_blank" rel="noopener" data-en="Get directions →" data-am="አቅጣጫ ያግኙ →">Get directions →</a>
+        </div>
+      </details>
     </div>
     <div class="loc-card">
       <div class="status" data-en="Open now" data-am="ክፍት ነው">Open now</div>
       <h3>Hawassa</h3>
       <p data-en="Lakeside branch, closest to the Sidama farms." data-am="በሐይቅ ዳር ያለ ቅርንጫፍ፣ ለሲዳማ እርሻዎች ቅርብ።">Lakeside branch, closest to the Sidama farms.</p>
       <div class="hours">06:30 – 21:00</div>
+      <details class="loc-toggle">
+        <summary data-en="View location" data-am="ካርታ ይመልከቱ">View location</summary>
+        <div class="panel">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4WUQ9CWPJkQ2pJ_OlqRDEzS9Z-DNU34Yu2E5K92VEJA&s=10" alt="Dukamo Coffee, Hawassa location" loading="lazy">
+          <div class="map-frame">
+            <iframe src="https://www.google.com/maps?q=7.0474295,38.478236&z=16&output=embed" loading="lazy" title="Map — Dukamo Coffee Hawassa"></iframe>
+          </div>
+          <a class="directions" href="https://maps.app.goo.gl/e7qeQ98enGJCkEjK7" target="_blank" rel="noopener" data-en="Get directions →" data-am="አቅጣጫ ያግኙ →">Get directions →</a>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -678,7 +761,7 @@
       <div class="eyebrow reveal" data-en="THE MENU" data-am="ምናሌ">THE MENU</div>
       <h2 class="reveal" data-en="Ready when you are." data-am="ዝግጁ ነን።">Ready when you are.</h2>
       <div class="cta-actions reveal">
-        <a class="btn-solid" href="#" data-en="View digital menu" data-am="ዲጂታል ምናሌ ይመልከቱ">View digital menu</a>
+        <button class="btn-solid" id="menuBtn" type="button" data-en="View digital menu" data-am="ዲጂታል ምናሌ ይመልከቱ">View digital menu</button>
         <a class="btn-ghost" href="#" data-en="Order for pickup" data-am="ለመውሰድ ይዘዙ">Order for pickup</a>
       </div>
     </div>
@@ -738,6 +821,17 @@
   </div>
 </footer>
 
+<div class="branch-overlay" id="branchOverlay" role="dialog" aria-modal="true" aria-labelledby="branchTitle">
+  <div class="branch-modal">
+    <h3 id="branchTitle" data-en="Which branch?" data-am="የትኛው ቅርንጫፍ?">Which branch?</h3>
+    <div class="sub" data-en="Menu and pricing can vary slightly by location." data-am="ምናሌና ዋጋ በቅርንጫፍ ትንሽ ሊለያይ ይችላል።">Menu and pricing can vary slightly by location.</div>
+    <button class="branch-option" data-branch="bole" disabled><span data-en="Bole" data-am="ቦሌ">Bole</span> <span class="arrow soon" data-en="Soon" data-am="በቅርቡ">Soon</span></button>
+    <button class="branch-option" data-branch="mexico">Mexico <span class="arrow">→</span></button>
+    <button class="branch-option" data-branch="hawassa" disabled><span data-en="Hawassa" data-am="ሀዋሳ">Hawassa</span> <span class="arrow soon" data-en="Soon" data-am="በቅርቡ">Soon</span></button>
+    <button class="branch-close" id="branchClose" data-en="Cancel" data-am="ይቅር">Cancel</button>
+  </div>
+</div>
+
 <script>
   const toggle = document.getElementById('langToggle');
   let isAmharic = false;
@@ -758,6 +852,27 @@
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
+
+  const MENU_URL = 'https://ma2salaalem.github.io/DUKAMO-menu-WEBSITE-/';
+  const menuBtn = document.getElementById('menuBtn');
+  const branchOverlay = document.getElementById('branchOverlay');
+  const branchClose = document.getElementById('branchClose');
+
+  function openBranchModal(){ branchOverlay.classList.add('open'); }
+  function closeBranchModal(){ branchOverlay.classList.remove('open'); }
+
+  if(menuBtn){ menuBtn.addEventListener('click', openBranchModal); }
+  branchClose.addEventListener('click', closeBranchModal);
+  branchOverlay.addEventListener('click', (e) => { if(e.target === branchOverlay) closeBranchModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeBranchModal(); });
+
+  document.querySelectorAll('.branch-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(btn.disabled) return;
+      closeBranchModal();
+      window.open(MENU_URL, '_blank', 'noopener');
+    });
+  });
 </script>
 
 </body>
