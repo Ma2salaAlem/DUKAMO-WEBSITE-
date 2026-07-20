@@ -390,9 +390,10 @@
   .value-cell p{ font-family:var(--body); font-size:14px; color:var(--cream-dim); line-height:1.6; max-width:32ch; margin:0 auto; }
 
   /* ---------- LOCATION PHOTO ---------- */
-  .loc-photo-grid{ margin-bottom:28px; }
+  .loc-photo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:28px; }
+  @media (max-width:900px){ .loc-photo-grid{ grid-template-columns:1fr; } }
   .loc-photo{ position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); }
-  .loc-photo img{ width:55%; height:auto; max: height 155px; display:block; object-fit:cover; }
+  .loc-photo img{ width:100%; height:auto; max-height:520px; display:block; object-fit:cover; }
   .loc-photo .cap{
     position:absolute; left:0; right:0; bottom:0; padding:18px 24px;
     background:linear-gradient(to top, rgba(22,15,10,0.88), transparent);
@@ -693,13 +694,19 @@
       <div class="eyebrow" data-en="VISIT US" data-am="ይጎብኙን">VISIT US</div>
       <h2 data-en="Find your nearest cup." data-am="የቅርብዎን ስኒ ያግኙ።">Find your nearest cup.</h2>
     </div>
-    <p class="desc" data-en="Three cafés, one roastery, all serving the same day's roast." data-am="ሦስት ካፌዎች፣ አንድ መቁያ ቤት፣ ሁሉም የዛሬውን ቆሎ ያቀርባሉ።">Three cafés, one roastery, all serving the same day's roast.</p>
+    <p class="desc" data-en="DUCAMO COFFEE OWNERS " data-am="የዱካሞ ቡና ባለቤቶች።">DUCAMO COFFEE OWNERS </p>
   </div>
 
   <div class="loc-photo-grid reveal">
     <div class="loc-photo">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoqSt77PmimAms1KTHTUpQ3j_NzPLpteNOHyoMxeUA&s=10" alt="Dukamo Coffee, Bole location interior" loading="lazy">
-      <div class="cap" data-en="Dukamo Coffee — Bole location" data-am="ዱካሞ ቡና — ቦሌ ቅርንጫፍ">Dukamo Coffee — owner</div>
+      <div class="cap" data-en="DUCAMO COFFEE OWNERS" data-am="የዱካሞ ቡና ባለቤቶች ">Dukamo Coffee — owners</div>
+    </div>
+    <div class="loc-photo">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG-YuKzins4qTBe-C-Frtuu_qKl6dYNmFwSs6lU5-Z7A&s=10" alt="Dukamo Coffee location" loading="lazy">
+    </div>
+    <div class="loc-photo">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJa9_3yLH0iHmz5P6QmxKXaSvk2lfhSAafF6Kxah0wRg&s=10" alt="Dukamo Coffee location" loading="lazy">
     </div>
   </div>
 
