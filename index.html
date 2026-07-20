@@ -68,7 +68,7 @@
   .logo{
     display:flex; align-items:center;
   }
-  .logo svg{ display:block; height:80px; width:auto; color:var(--cream); }
+  .logo svg{ display:block; height:40px; width:auto; color:var(--cream); }
   .wm-am{ font-family:'Noto Serif Ethiopic', serif; font-weight:700; }
   .wm-en{ font-family:'Source Serif 4', serif; font-weight:700; letter-spacing:0.04em; }
   footer .f-logo svg{ height:34px; width:auto; color:var(--cream); display:block; }
@@ -392,7 +392,7 @@
   /* ---------- LOCATION PHOTO ---------- */
   .loc-photo-grid{ margin-bottom:28px; }
   .loc-photo{ position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); }
-  .loc-photo img{ width:100%; height:auto; max-height:520px; display:block; object-fit:cover; }
+  .loc-photo img{ width:55%; height:auto; max: height 155px; display:block; object-fit:cover; }
   .loc-photo .cap{
     position:absolute; left:0; right:0; bottom:0; padding:18px 24px;
     background:linear-gradient(to top, rgba(22,15,10,0.88), transparent);
@@ -698,8 +698,8 @@
 
   <div class="loc-photo-grid reveal">
     <div class="loc-photo">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEoDPeCno0houjdfkpkxL_KYzCZVoTy8Cf75m3LJ1_GQ&s=10" alt="Dukamo Coffee, Bole location interior" loading="lazy">
-      <div class="cap" data-en="Dukamo Coffee — Bole location" data-am="ዱካሞ ቡና — ቦሌ ቅርንጫፍ">Dukamo Coffee — Bole location</div>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoqSt77PmimAms1KTHTUpQ3j_NzPLpteNOHyoMxeUA&s=10" alt="Dukamo Coffee, Bole location interior" loading="lazy">
+      <div class="cap" data-en="Dukamo Coffee — Bole location" data-am="ዱካሞ ቡና — ቦሌ ቅርንጫፍ">Dukamo Coffee — owner</div>
     </div>
   </div>
 
@@ -853,7 +853,7 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
 
-  const MENU_URL = 'https://ma2salaalem.github.io/DUKAMO-menu-WEBSITE-/';
+  const MENU_URL = 'https://ma2salaalem.github.io/DUKAMO/';
   const menuBtn = document.getElementById('menuBtn');
   const branchOverlay = document.getElementById('branchOverlay');
   const branchClose = document.getElementById('branchClose');
